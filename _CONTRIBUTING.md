@@ -1,4 +1,56 @@
-# Contributing
+# Contributing/Git Workflow
+
+## Team Workflow
+1. git checkout development
+2. git pull --rebase origin development
+3. git checkout -b feature-branch
+  bug/...
+  feat/...
+  test/...
+  doc/...
+  refactor/...
+  EX: feat/oathFacebook
+4A. Make changes
+4B. Git add -> git commit
+5. git pull --rebase origin development
+5.5. git rebase --continue
+6. git push origin feature-branch
+  EX: git push origin feat/oathFacebook
+7. Submit pull request
+
+If Pull Request has been merged since you last worked:
+8. git checkout development
+9. git pull --rebase origin development (ie start at step 2 again)
+
+Else:
+8. make more commits to feature-branch
+9. git push origin feature/branch
+  EX: git push origin feat/oathFacebook
+
+Make sure you're following the style guide further down the page 
+commit messages in your branch as well as the pull request. The pull
+request will end up being the commit message in the dev branch.
+
+## Useful Git Commands
+
+Run git pull --rebase origin development every so often to stay up 
+to date with development branch.
+
+If you want to integrate changes from someone else's feature branch you:
+git pull --rebase origin theirBranchName
+
+If you get tired of typing out git push origin myBranchName you can run: 
+git push --set-upstream origin myBranchName
+From then on you can just run 'git push'
+
+If you accidentally started work without creating a branch you can take 
+your changes with you to a new branch by simply using 'git checkout -b branchName'. 
+
+If you've accidentally made some commits to the wrong branch you can:
+git branch feat/Name    (create branch which will copy current branch)
+git reset --soft HEAD~3  (resets HEAD's state to where it was 3 (for example) commits ago)
+git checkout feat/Name  (move to the new branch and keep working) 
+
 
 ## General Workflow
 
