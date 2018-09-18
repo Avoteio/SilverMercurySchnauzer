@@ -10,7 +10,7 @@ const twitter = new TwitterStrategy(
   {
     consumerKey: process.env.twConsumerKey,
     consumerSecret: process.env.twConsumerSecret,
-    callbackURL: `https://${process.env.herokuAppName}/api/oauth/twitter/authenticatedCallback`
+    callbackURL: `${process.env.herokuAppName}/api/oauth/twitter/authenticatedCallback`
   },
   (token, tokenSecret, profile, done) => {
     twOauth.token = token;
