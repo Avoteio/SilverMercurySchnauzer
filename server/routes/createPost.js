@@ -25,6 +25,7 @@ router.post('/save', (req, res) => {
 router.post('/publish', (req, res) => {
   let userId = req.body.userId;
   let oauth = twitter.oauth;
+  console.log(oauth);
   let qs = {
     status: `${req.body.caption}  ${req.body.post}  ${req.body.url}`
   }

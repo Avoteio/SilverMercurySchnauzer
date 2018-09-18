@@ -19,7 +19,7 @@ const Oauth = (props) => {
         >
          Login with Twitter
         </Button>
-        <Button 
+        {/* <Button 
           variant="contained" 
           size="small" 
           className='login-btn' 
@@ -30,8 +30,14 @@ const Oauth = (props) => {
           style={{ margin: '15px' }}
         >
           Login with Facebook
-        </Button>
-        <Button variant="contained" size="small" className='login-btn' color='primary' value='logout-btn' style={{ margin: '15px' }} 
+        </Button> */}
+        <Button 
+          variant="contained" 
+          size="small" 
+          className='login-btn' 
+          color='primary' 
+          value='logout-btn' 
+          style={{ margin: '15px' }} 
           onClick={() => {
             localStorage.removeItem('token');
             props.history.push('/login');
