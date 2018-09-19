@@ -5,3 +5,4 @@ server/newindex.js
 package-lock.json
 database/data/
 logfile
+client/dist/bundle.js
