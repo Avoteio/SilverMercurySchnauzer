@@ -4,6 +4,7 @@ import axios from 'axios';
 import Login from './components/Login.jsx';
 import Signup from './components/Signup.jsx';
 import Oauth from './components/Oauth.jsx';
+import Dashboard from './components/Dashboard.jsx';
 import Feed from './components/Feed.jsx';
 import CreatePost from './components/CreatePost.jsx';
 import LoadingScreen from './components/LoadingScreen.jsx';
@@ -52,7 +53,7 @@ class App extends React.Component {
       <div>
         <Switch>
           <Route exact path='/login' component={Login} />
-          <Route path='/feed' component={Feed} />
+          <Route path='/feed' component={Dashboard} />
           <Route exact path='/signup' component={Signup} />
           <Route exact path='/oauth' component={Oauth} />
           <Route exact path='/createpost' component={CreatePost} />

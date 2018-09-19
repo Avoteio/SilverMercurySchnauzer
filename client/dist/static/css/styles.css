@@ -1,0 +1,22 @@
+body {
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.dashboard {
+  min-height: 80vh;
+  display: flex;
+  padding: 20px;
+}
+
+.live-feed {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.feed {
+  height: 70vh;
+  background: #fafafa;
+  border-radius: 5px;
+}
