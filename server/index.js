@@ -46,7 +46,6 @@ app.post('/validateuser' , (req, res) => {
   } else {
     res.send('noAuthentication').status(200);
   }
-  
 });
 
 // Needed to handle page refresh when using React Router
