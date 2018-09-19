@@ -32,6 +32,7 @@ const getUserTokens = (req, res, next) => {
 
 router.use('/home/updateTwitterFeed/:userId', getUserTokens);
 router.use('/users/:userId/friends', getUserTokens);
+// router.use('/users/:userId/tweets', getUserTokens);
 
 router.get('/', (req, res) => {
   res.status(200).json({message: 'connected / GET'});
@@ -42,10 +43,8 @@ router.get('/home', (req, res) => {
 });
 
 router.get('/home/updateTwitterFeed/:userId', (req, res) => {
-  request.get({url:`https://api.twitter.com/1.1/statuses/user_timeline.json`, oauth: req.oauth}, (error, response, body) => {
-    // pull out required info from each tweet object and send back
-    let tweets = util.scrapeArr(util.tweetFields, JSON.parse(body));
-    res.send(tweets).status(200);
+  request.get({url:`https://api.twitter.com/1.1/statuses/user_timeline.json?include_rts=0&exclude_replies=1&count=200`, oauth: req.oauth}, (error, response, body) => {
+    res.send(JSON.parse(body)).status(200);
   });
 });
 
