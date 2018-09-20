@@ -19,6 +19,8 @@ class Feed extends React.Component {
 
     this.handleValidation = this.handleValidation.bind(this);
     this.populateFeed = this.populateFeed.bind(this);
+    this.getPersonality = this.getPersonality.bind(this);
+    this.getTone = this.getTone.bind(this);
   }
 
   componentDidMount() {
@@ -27,6 +29,9 @@ class Feed extends React.Component {
     }, () => {
       this.handleValidation();
     });
+
+   
+    
   }
 
   handleValidation() {
@@ -60,6 +65,26 @@ class Feed extends React.Component {
       })
   }
 
+  getPersonality() {
+    axios.post('/api/watson/getPersonality')
+    .then((content)=>{
+      console.log('post success!,',content)
+    })
+    .catch((error)=>{
+      console.log('Post error was:',error)
+    })
+  }
+
+  getTone() {
+    axios.get('/api/watson/getTone')
+    .then((content)=>{
+      console.log('post success!,',content)
+    })
+    .catch((error)=>{
+      console.log('Post error was:',error)
+    })
+  }
+
   render() {
     if (this.state.loading) {
       return <LoadingScreen /> 
@@ -70,6 +95,9 @@ class Feed extends React.Component {
         return (
           <div>
             <NavBar />
+            <div onClick={this.getPersonality}>getPersonality</div>
+            <div onClick={this.getTone}>getTone</div>
+
             <div className='social-media-posts-container' style={{ width: '80%', marginLeft: 'auto', marginRight: 'auto' }}>
               {this.state.items.map((tweet, i) => <FeedItem key={i} tweet={tweet} />)}
             </div>
