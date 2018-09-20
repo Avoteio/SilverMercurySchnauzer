@@ -53,7 +53,7 @@ router.get('/home/updateTwitterFeed/:userId', (req, res) => {
 });
 
 router.get('/users/:userId/feed', (req, res) => {
-  request.get({url:`https://api.twitter.com/1.1/statuses/home_timeline.json?count=200`, oauth: req.oauth}, (err, response, body) => {
+  request.get({url:`https://api.twitter.com/1.1/statuses/home_timeline.json?tweet_mode=extended&count=200`, oauth: req.oauth}, (err, response, body) => {
     console.log(body);  
   
     res.send(JSON.parse(body)).status(200);
@@ -66,7 +66,7 @@ router.get('/users/:userId/friends', (req, res) => {
     Promise.all(ids.map(id => {
       const options = {
         method: 'GET',
-        url: `https://api.twitter.com/1.1/statuses/user_timeline.json?user_id=${id}&include_rts=0&count=200`,
+        url: `https://api.twitter.com/1.1/statuses/user_timeline.json?user_id=${id}&tweet_mode=extended&include_rts=0&count=200`,
         oauth: req.oauth
       };
       return new Promise((resolve, reject) => {
@@ -83,7 +83,7 @@ router.get('/users/:userId/friends', (req, res) => {
       let map = {};
       results.forEach(user => {
         user.forEach(tweet => {
-          map[tweet.user.name] ? map[tweet.user.name].push(tweet.text) : map[tweet.user.name] = [tweet.text];
+          map[tweet.user.name] ? map[tweet.user.name].push(tweet.full_text) : map[tweet.user.name] = [tweet.full_text];
         });
       });
       return map;
