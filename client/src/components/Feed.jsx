@@ -17,17 +17,22 @@
 //       authenticated: false
 //     }
 
-//     this.handleValidation = this.handleValidation.bind(this);
-//     this.populateFeed = this.populateFeed.bind(this);
-//   }
+    this.handleValidation = this.handleValidation.bind(this);
+    this.populateFeed = this.populateFeed.bind(this);
+    this.getPersonality = this.getPersonality.bind(this);
+    this.getTone = this.getTone.bind(this);
+  }
 
-//   componentDidMount() {
-//     this.setState({
-//       hasMounted: true,
-//     }, () => {
-//       this.handleValidation();
-//     });
-//   }
+  componentDidMount() {
+    this.setState({
+      hasMounted: true,
+    }, () => {
+      this.handleValidation();
+    });
+
+   
+    
+  }
 
 //   handleValidation() {
 //     axios.post('/validateuser', {
@@ -60,24 +65,47 @@
 //       })
 //   }
 
-//   render() {
-//     if (this.state.loading) {
-//       return <LoadingScreen /> 
-//     } else {
-//       if (!this.state.authenticated) {
-//         return <Redirect to='/login' />
-//       } else {
-//         return (
-//           <div>
-//             <NavBar />
-//             <div className='social-media-posts-container' style={{ width: '80%', marginLeft: 'auto', marginRight: 'auto' }}>
-//               {this.state.items.map((tweet, i) => <FeedItem key={i} tweet={tweet} />)}
-//             </div>
-//           </div>
-//         );
-//       }
-//     }
-//   }
-// }
+  getPersonality() {
+    axios.post('/api/watson/getPersonality')
+    .then((content)=>{
+      console.log('post success!,',content)
+    })
+    .catch((error)=>{
+      console.log('Post error was:',error)
+    })
+  }
+
+  getTone() {
+    axios.get('/api/watson/getTone')
+    .then((content)=>{
+      console.log('post success!,',content)
+    })
+    .catch((error)=>{
+      console.log('Post error was:',error)
+    })
+  }
+
+  render() {
+    if (this.state.loading) {
+      return <LoadingScreen /> 
+    } else {
+      if (!this.state.authenticated) {
+        return <Redirect to='/login' />
+      } else {
+        return (
+          <div>
+            <NavBar />
+            <div onClick={this.getPersonality}>getPersonality</div>
+            <div onClick={this.getTone}>getTone</div>
+
+            <div className='social-media-posts-container' style={{ width: '80%', marginLeft: 'auto', marginRight: 'auto' }}>
+              {this.state.items.map((tweet, i) => <FeedItem key={i} tweet={tweet} />)}
+            </div>
+          </div>
+        );
+      }
+    }
+  }
+}
 
 // export default withRouter(Feed);

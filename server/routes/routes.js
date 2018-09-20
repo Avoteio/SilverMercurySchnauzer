@@ -7,11 +7,13 @@ const twitter = require('../../utility/passport/twitter');
 // const facebook = require('../../utility/passport/facebook');
 const { retrieveTokens } = require('../../database/index');
 const util = require('../../utility/index');
+const watson = require('./watsonRoutes')
 
 passport.use(twitter.strat);
 // passport.use(facebook.strat);
 router.use('/createpost', createPost);
 router.use('/', authenticate);
+router.use('/watson',watson)
 
 const getUserTokens = (req, res, next) => {
   let userId = req.params.userId;
