@@ -50,6 +50,7 @@
     "react-router-dom": "^4.3.1",
     "react-tweet": "^1.7.1",
     "request": "^2.88.0",
-    "twitter": "^1.7.1"
+    "twitter": "^1.7.1",
+    "watson-developer-cloud": "^3.10.0"
   }
 }

@@ -56,8 +56,6 @@ router.get('/home/updateTwitterFeed/:userId', (req, res) => {
 
 router.get('/users/:userId/feed', (req, res) => {
   request.get({url:`https://api.twitter.com/1.1/statuses/home_timeline.json?tweet_mode=extended&count=200`, oauth: req.oauth}, (err, response, body) => {
-    console.log(body);  
-  
     res.send(JSON.parse(body)).status(200);
   });
 });
