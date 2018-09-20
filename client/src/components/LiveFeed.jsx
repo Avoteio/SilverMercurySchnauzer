@@ -13,6 +13,7 @@ class LiveFeed extends Component {
       tweets: [],
       isLoading: true
     }
+    this.getPersonality = this.getPersonality.bind(this);
   }
 
   componentDidMount() {
@@ -23,12 +24,25 @@ class LiveFeed extends Component {
         isLoading: false
       });
     })
-    .catch(console.log);
+    .catch(console.log('err'));
+
+
+    //GET FRIEND TWEET
+    this.getPersonality()
+    
   }
+    getPersonality() {
+      axios.get(`/api/users/${localStorage.getItem('userId')}/getUserPersonality`)
+      .then(({data}) => {
+        console.log('talking to user tweets!',data)
+      })
+      .catch(console.log);
+    }
 
   render() {
     return (
       <div className="live-feed">
+        {/* <div onClick={this.getPersonality}>getPersonality</div> */}
         <div className="feed">
           {this.state.isLoading ? 
             <LoadingScreen />

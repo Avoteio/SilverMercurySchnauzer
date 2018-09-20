@@ -27,6 +27,7 @@ router.post('/getPersonality', (req, res) => {
       if (err) {
         console.log('error:', err);
       } else {
+        console.log('success!!!')
         console.log(JSON.stringify(response, null, 2));
       }
     }
