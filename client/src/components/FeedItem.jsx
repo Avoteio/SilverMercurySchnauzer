@@ -11,7 +11,6 @@ class FeedItem extends React.Component {
       item: this.props.tweet,
       expanded: false
     };
-    // console.log('tweet: ', this.state.item);fsdfs
     this.handleExpandClick = this.handleExpandClick.bind(this);
   }
 
@@ -24,11 +23,11 @@ class FeedItem extends React.Component {
   render() {
     return (
       <div className='post-container'>
-        <Card style={{ backgroundColor: '#3f51b5', marginRight: 'auto', marginLeft: 'auto', marginTop: '5px', marginBottom: '5px', width: '80%' }}>
+        <Card style={{ backgroundColor: 'rgb(197, 206, 255)', marginRight: 'auto', marginLeft: 'auto', marginTop: '5px', marginBottom: '5px', width: '90%' }}>
           <CardHeader
             avatar={
               <Avatar src={this.state.item.user.profile_image_url}>
-                P
+                
               </Avatar>
             }
             action={

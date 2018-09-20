@@ -1,21 +1,21 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import FeedItem from './FeedItem.jsx';
-import NavBar from './NavBar.jsx';
-import { Redirect, withRouter } from "react-router-dom";
-import axios from 'axios';
-import LoadingScreen from './LoadingScreen.jsx';
+// import React from 'react';
+// import ReactDOM from 'react-dom';
+// import FeedItem from './FeedItem.jsx';
+// import NavBar from './NavBar.jsx';
+// import { Redirect, withRouter } from "react-router-dom";
+// import axios from 'axios';
+// import LoadingScreen from './LoadingScreen.jsx';
 
-class Feed extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      items: [1, 2, 3, 4, 5],
-      authenticated: false,
-      loading: true,
-      hasMounted: false,
-      authenticated: false
-    }
+// class Feed extends React.Component {
+//   constructor(props) {
+//     super(props);
+//     this.state = {
+//       items: [1, 2, 3, 4, 5],
+//       authenticated: false,
+//       loading: true,
+//       hasMounted: false,
+//       authenticated: false
+//     }
 
     this.handleValidation = this.handleValidation.bind(this);
     this.populateFeed = this.populateFeed.bind(this);
@@ -34,36 +34,36 @@ class Feed extends React.Component {
     
   }
 
-  handleValidation() {
-    axios.post('/validateuser', {
-      nativeToken: localStorage.getItem('token'),
-      userId: localStorage.getItem('userId')
-    })
-      .then((validationStatus) => {
-        if (validationStatus.data === 'fullyAuthenticated') {
-          this.setState({
-            authenticated: true,
-          }, this.populateFeed);
-        } else if (validationStatus.data === 'onlyNative') {
-          this.props.history.push('/oauth');
-        } else {
-          this.props.history.push('/login');
-        }
-      })
-  }
+//   handleValidation() {
+//     axios.post('/validateuser', {
+//       nativeToken: localStorage.getItem('token'),
+//       userId: localStorage.getItem('userId')
+//     })
+//       .then((validationStatus) => {
+//         if (validationStatus.data === 'fullyAuthenticated') {
+//           this.setState({
+//             authenticated: true,
+//           }, this.populateFeed);
+//         } else if (validationStatus.data === 'onlyNative') {
+//           this.props.history.push('/oauth');
+//         } else {
+//           this.props.history.push('/login');
+//         }
+//       })
+//   }
 
-  populateFeed() {
-    axios.get(`/api/home/updateTwitterFeed/${localStorage.getItem('userId')}`)
-      .then((tweets) => {
-        this.setState({
-          items: tweets.data,
-          loading: false
-        });
-      })
-      .catch((err) => {
-        console.log('Error retrieving tweets for user: ', err);
-      })
-  }
+//   populateFeed() {
+//     axios.get(`/api/home/updateTwitterFeed/${localStorage.getItem('userId')}`)
+//       .then((tweets) => {
+//         this.setState({
+//           items: tweets.data,
+//           loading: false
+//         });
+//       })
+//       .catch((err) => {
+//         console.log('Error retrieving tweets for user: ', err);
+//       })
+//   }
 
   getPersonality() {
     axios.post('/api/watson/getPersonality')
@@ -108,4 +108,4 @@ class Feed extends React.Component {
   }
 }
 
-export default withRouter(Feed);
+// export default withRouter(Feed);

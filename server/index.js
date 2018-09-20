@@ -9,7 +9,7 @@ const PORT = process.env.PORT || 3000;
 const session = require('express-session');
 const db = require('../database/index.js');
 const CronJob = require('cron').CronJob
-const { publishTweets } = require('../scripts/index')
+const { publishTweets } = require('../scripts/index');
 
 // ***************************************************************
 // see below for helpful getting started guide to cron jobs
@@ -46,7 +46,6 @@ app.post('/validateuser' , (req, res) => {
   } else {
     res.send('noAuthentication').status(200);
   }
-  
 });
 
 // Needed to handle page refresh when using React Router

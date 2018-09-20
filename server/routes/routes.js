@@ -34,6 +34,7 @@ const getUserTokens = (req, res, next) => {
 
 router.use('/home/updateTwitterFeed/:userId', getUserTokens);
 router.use('/users/:userId/friends', getUserTokens);
+router.use('/users/:userId/feed', getUserTokens);
 
 router.get('/', (req, res) => {
   res.status(200).json({message: 'connected / GET'});
@@ -44,20 +45,30 @@ router.get('/home', (req, res) => {
 });
 
 router.get('/home/updateTwitterFeed/:userId', (req, res) => {
-  request.get({url:`https://api.twitter.com/1.1/statuses/user_timeline.json`, oauth: req.oauth}, (error, response, body) => {
-    // pull out required info from each tweet object and send back
-    let tweets = util.scrapeArr(util.tweetFields, JSON.parse(body));
-    res.send(tweets).status(200);
+  request.get({url:`https://api.twitter.com/1.1/statuses/user_timeline.json?count=200`, oauth: req.oauth}, (err, response, body) => {
+    if (error) {
+      console.log(err);
+      res.send(err);
+    }
+    res.send(JSON.parse(body)).status(200);
+  });
+});
+
+router.get('/users/:userId/feed', (req, res) => {
+  request.get({url:`https://api.twitter.com/1.1/statuses/home_timeline.json?tweet_mode=extended&count=200`, oauth: req.oauth}, (err, response, body) => {
+    console.log(body);  
+  
+    res.send(JSON.parse(body)).status(200);
   });
 });
 
 router.get('/users/:userId/friends', (req, res) => {
-  request.get({url:`https://api.twitter.com/1.1/friends/ids.json`, oauth: req.oauth}, (error, response, body) => {
+  request.get({url:`https://api.twitter.com/1.1/friends/ids.json`, oauth: req.oauth}, (err, response, body) => {
     const {ids} = JSON.parse(body);
     Promise.all(ids.map(id => {
       const options = {
         method: 'GET',
-        url: `https://api.twitter.com/1.1/statuses/user_timeline.json?user_id=${id}&include_rts=0&count=200`,
+        url: `https://api.twitter.com/1.1/statuses/user_timeline.json?user_id=${id}&tweet_mode=extended&include_rts=0&count=200`,
         oauth: req.oauth
       };
       return new Promise((resolve, reject) => {
@@ -74,7 +85,7 @@ router.get('/users/:userId/friends', (req, res) => {
       let map = {};
       results.forEach(user => {
         user.forEach(tweet => {
-          map[tweet.user.name] ? map[tweet.user.name].push(tweet.text) : map[tweet.user.name] = [tweet.text];
+          map[tweet.user.name] ? map[tweet.user.name].push(tweet.full_text) : map[tweet.user.name] = [tweet.full_text];
         });
       });
       return map;

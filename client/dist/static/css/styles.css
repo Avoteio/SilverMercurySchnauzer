@@ -1,0 +1,42 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+.dashboard {
+  min-height: 80vh;
+  display: flex;
+  padding: 20px;
+}
+
+.live-feed {
+  width: 500px;
+  height: 80vh;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.feed {
+  /* height: 70vh; */
+  height: 100%;
+  width: 100%;
+  padding: 20px;
+  background: #fafafa;
+  /* display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 5px; */
+  overflow: scroll;
+}
+
+.post-container {
+  width: 100%;
+}
+
+.tweet {
+  width: 100%;
+}
