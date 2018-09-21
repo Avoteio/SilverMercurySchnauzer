@@ -1,5 +1,5 @@
 import React from 'react';
-import {Polar, HorizontalBar} from 'react-chartjs-2';
+import {Bar} from 'react-chartjs-2';
 import {data} from '../dummyData';
 
 class Personality extends React.Component {
@@ -14,7 +14,7 @@ class Personality extends React.Component {
 
     return (
       <div className="polar-chart">
-        <HorizontalBar
+        <Bar
           data={{
             datasets: [{
               data: percentile,
@@ -33,7 +33,7 @@ class Personality extends React.Component {
             title: {
               display: true,
               fontSize: 30,
-              text: 'Social Personality'
+              text: 'Overall Tone'
             }
           }}
         />

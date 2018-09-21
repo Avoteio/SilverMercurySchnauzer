@@ -45,7 +45,7 @@ router.get('/home', (req, res) => {
 });
 
 router.get('/home/updateTwitterFeed/:userId', (req, res) => {
-  request.get({url:`https://api.twitter.com/1.1/statuses/user_timeline.json?count=200`, oauth: req.oauth}, (err, response, body) => {
+  request.get({url:`https://api.twitter.com/1.1/statuses/user_timeline.json?count=100`, oauth: req.oauth}, (err, response, body) => {
     if (error) {
       console.log(err);
       res.send(err);
@@ -55,7 +55,7 @@ router.get('/home/updateTwitterFeed/:userId', (req, res) => {
 });
 
 router.get('/users/:userId/feed', (req, res) => {
-  request.get({url:`https://api.twitter.com/1.1/statuses/home_timeline.json?tweet_mode=extended&count=200`, oauth: req.oauth}, (err, response, body) => {
+  request.get({url:`https://api.twitter.com/1.1/statuses/home_timeline.json?tweet_mode=extended&count=100`, oauth: req.oauth}, (err, response, body) => {
     res.send(JSON.parse(body)).status(200);
   });
 });
