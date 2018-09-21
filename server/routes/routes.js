@@ -99,6 +99,7 @@ router.use('/home/updateTwitterFeed/:userId', getUserTokens);
 router.use('/users/:userId/friends', getUserTokens);
 router.use('/users/:userId/feed', getUserTokens);
 router.use('/users/:userId/getUserPersonality',getUserTokens);
+router.use('/users/:userId/getUserTone',getUserTokens);
 
 router.get('/', (req, res) => {
   res.status(200).json({message: 'connected / GET'});
@@ -117,7 +118,7 @@ router.get('/home/updateTwitterFeed/:userId', (req, res) => {
     res.send(JSON.parse(body)).status(200);
   });
 });
-
+// -------WATSON HERE-------
 router.get('/users/:userId/getUserPersonality', (req,res)=>{
   getUserTweets(req.oauth,(err, body)=>{
     let tweets = [];
@@ -136,6 +137,26 @@ router.get('/users/:userId/getUserPersonality', (req,res)=>{
       }
     })
   })
+})
+
+router.get('/users/:userId/getUserTone', (req,res)=>{
+  getUserTweets(req.oauth,(err, body)=>{  
+    let tweets = [];
+      body.forEach((tweet)=>{
+        tweets.push(tweet.full_text)
+      })
+      let tweetText = tweets.join('')
+      //watson here
+      getUserTone(tweetText,(err,body) => {
+        if (err) {
+          console.log('error',err)
+          res.status(err.code).send(err.error)
+        } else {
+          console.log('PERSONALITY IS:',body)
+          res.send(body);
+        }
+      })
+    })
 })
 
 router.get('/users/:userId/feed', (req, res) => {

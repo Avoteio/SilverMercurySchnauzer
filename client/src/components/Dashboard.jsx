@@ -21,6 +21,7 @@ class Dashboard extends React.Component {
 
     this.handleValidation = this.handleValidation.bind(this);
     this.populateFeed = this.populateFeed.bind(this);
+    this.getUserTone = this.getUserTone.bind(this);
   }
 
   componentDidMount() {
@@ -29,7 +30,19 @@ class Dashboard extends React.Component {
     }, () => {
       this.handleValidation();
     });
+
+    this.getUserTone();
   }
+
+  getUserTone() {
+    axios.get(`/api/users/${localStorage.getItem('userId')}/getUserTone`)
+    .then(({data}) => {
+      console.log('talking to user tweets for those sweet, dulcet tones!',data)
+    })
+    .catch(console.log);
+  }
+
+  
 
   handleValidation() {
     axios.post('/validateuser', {
