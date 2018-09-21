@@ -25,8 +25,6 @@ class LiveFeed extends Component {
       });
     })
     .catch(console.log('err'));
-
-
     //GET FRIEND TWEET
     this.getPersonality()
     
