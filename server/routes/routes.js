@@ -70,6 +70,31 @@ const getUserPersonality = (text,callback) => {
   );
 }
 
+const getUserTone = (text,callback) => { 
+  var toneAnalyzer = new ToneAnalyzerV3({
+    username: 'c2ef87b2-7083-4955-8520-b5576740100c',
+    password: 'qCXrdHEQEzjp',
+    version: '2017-09-21',
+    url: 'https://gateway.watsonplatform.net/tone-analyzer/api/'
+  });
+  toneAnalyzer.tone(
+    {
+      tone_input: text,
+      content_type: 'text/plain'
+    },
+    function(err, tone) {
+      if (err) {
+        console.log(err);
+        callback(err)
+      } else {
+        console.log(JSON.stringify(tone, null, 2));
+        callback(null,JSON.stringify(tone, null, 2))
+      }
+    }
+  );
+}
+  
+
 router.use('/home/updateTwitterFeed/:userId', getUserTokens);
 router.use('/users/:userId/friends', getUserTokens);
 router.use('/users/:userId/feed', getUserTokens);
@@ -94,9 +119,7 @@ router.get('/home/updateTwitterFeed/:userId', (req, res) => {
 });
 
 router.get('/users/:userId/getUserPersonality', (req,res)=>{
-  // console.log('HERE IS REQ.OAUTH',req.oauth);
   getUserTweets(req.oauth,(err, body)=>{
-    // console.log('USER BODY IS:',body);
     let tweets = [];
     body.forEach((tweet)=>{
       tweets.push(tweet.full_text)
@@ -106,12 +129,13 @@ router.get('/users/:userId/getUserPersonality', (req,res)=>{
     getUserPersonality(tweetText,(err,body) => {
       if (err) {
         console.log('error',err)
+        res.status(err.code).send(err.error)
+      } else {
+        console.log('PERSONALITY IS:',body)
+        res.send(body);
       }
-      console.log('PERSONALITY IS:',body)
-      res.send(body);
     })
   })
-
 })
 
 router.get('/users/:userId/feed', (req, res) => {

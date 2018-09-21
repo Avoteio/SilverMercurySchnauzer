@@ -39,6 +39,7 @@ router.post('/getPersonality', (req, res) => {
 });
 
 router.get('/getTone', (req,res)=> {
+  console.log('getting that tone')
   var toneAnalyzer = new ToneAnalyzerV3({
     username: 'c2ef87b2-7083-4955-8520-b5576740100c',
     password: 'qCXrdHEQEzjp',
