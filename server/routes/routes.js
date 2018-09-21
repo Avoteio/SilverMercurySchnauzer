@@ -10,6 +10,8 @@ const util = require('../../utility/index');
 const watson = require('./watsonRoutes')
 var PersonalityInsightsV3 = require('watson-developer-cloud/personality-insights/v3');
 var ToneAnalyzerV3 = require('watson-developer-cloud/tone-analyzer/v3');
+const bodyParser = require('body-parser');
+const jsonParser = bodyParser.json();
 
 passport.use(twitter.strat);
 // passport.use(facebook.strat);
@@ -118,6 +120,7 @@ router.get('/home/updateTwitterFeed/:userId', (req, res) => {
     res.send(JSON.parse(body)).status(200);
   });
 });
+
 // -------WATSON HERE-------
 router.get('/users/:userId/getUserPersonality', (req,res)=>{
   getUserTweets(req.oauth,(err, body)=>{
@@ -157,6 +160,19 @@ router.get('/users/:userId/getUserTone', (req,res)=>{
         }
       })
     })
+})
+
+router.post ('/getTweetTone', jsonParser, (req,res)=>{
+  let tweet = req.body.tweet;
+  getUserTone(tweet,(err,body) => {
+    if (err) {
+      console.log(err)
+      res.send(err)
+    } else {
+      console.log('single twee to tone success!')
+      res.send(body)
+    }
+  })
 })
 
 router.get('/users/:userId/feed', (req, res) => {
