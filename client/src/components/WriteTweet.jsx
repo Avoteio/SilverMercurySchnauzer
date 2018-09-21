@@ -2,7 +2,10 @@ import React, { Component } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
+import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import axios from 'axios';
+var ToneAnalyzerV3 = require('watson-developer-cloud/tone-analyzer/v3');
+
 
 class WriteTweet extends Component {
   constructor(props) {
@@ -48,6 +51,10 @@ class WriteTweet extends Component {
 
         />
         <div className="button">
+        <Button variant="contained" color="default">
+        Analyze
+        <CloudUploadIcon />
+      </Button>
           <Button style={{"float" : "right"}} onClick={() => {
             this.handleClick();
           }} variant="contained" color="primary" >
