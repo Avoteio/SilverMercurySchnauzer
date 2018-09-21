@@ -13,7 +13,6 @@ class LiveFeed extends Component {
       tweets: [],
       isLoading: true
     }
-    this.getPersonality = this.getPersonality.bind(this);
   }
 
   componentDidMount() {
@@ -28,16 +27,9 @@ class LiveFeed extends Component {
 
 
     //GET FRIEND TWEET
-    this.getPersonality()
+    // this.getPersonality()
     
   }
-    getPersonality() {
-      axios.get(`/api/users/${localStorage.getItem('userId')}/getUserPersonality`)
-      .then(({data}) => {
-        console.log('talking to user tweets!',data)
-      })
-      .catch(console.log);
-    }
 
   render() {
     return (

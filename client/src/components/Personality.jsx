@@ -1,10 +1,26 @@
 import React from 'react';
+import axios from 'axios';
 import {Polar, HorizontalBar} from 'react-chartjs-2';
 import {data} from '../dummyData';
 
 class Personality extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      data: {}
+    }
+  }
+
+  componentDidMount() {
+    this.getPersonality();
+  }
+
+  getPersonality() {
+    axios.get(`/api/users/${localStorage.getItem('userId')}/getUserPersonality`)
+    .then(({data}) => {
+      console.log('talking to user tweets!',data)
+    })
+    .catch(console.log);
   }
 
   render() {

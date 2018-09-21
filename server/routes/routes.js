@@ -94,9 +94,9 @@ router.get('/home/updateTwitterFeed/:userId', (req, res) => {
 });
 
 router.get('/users/:userId/getUserPersonality', (req,res)=>{
-  console.log('HERE IS REQ.OAUTH',req.oauth);
+  // console.log('HERE IS REQ.OAUTH',req.oauth);
   getUserTweets(req.oauth,(err, body)=>{
-    console.log('USER BODY IS:',body);
+    // console.log('USER BODY IS:',body);
     let tweets = [];
     body.forEach((tweet)=>{
       tweets.push(tweet.full_text)
