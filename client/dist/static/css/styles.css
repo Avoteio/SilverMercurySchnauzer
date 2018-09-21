@@ -13,9 +13,9 @@ body {
 }
 
 .live-feed {
-  width: 500px;
+  width: 30vw;
   height: 80vh;
-  padding: 20px;
+  margin-right: 20px;
   display: flex;
   flex-direction: column;
 }
@@ -39,4 +39,22 @@ body {
 
 .tweet {
   width: 100%;
+}
+
+
+/* CHARTS */
+.charts {
+  width: 70vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.charts>* {
+  padding: 20px;
+  background: #fafafa;
+}
+
+canvas {
+  width: 100% !important;
 }

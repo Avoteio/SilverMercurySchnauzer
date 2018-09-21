@@ -6,6 +6,7 @@ import axios from 'axios';
 import LoadingScreen from './LoadingScreen.jsx';
 import LiveFeed from './LiveFeed.jsx';
 import Personality from './Personality.jsx';
+import Sentiment from './Sentiment.jsx';
 
 class Dashboard extends React.Component {
   constructor(props) {
@@ -67,7 +68,10 @@ class Dashboard extends React.Component {
         <NavBar />
         <div className="dashboard">
           <LiveFeed />
-          <Personality />
+          <div className="charts">
+            <Personality />
+            <Sentiment />
+          </div>
         </div>
       </div>
     )
