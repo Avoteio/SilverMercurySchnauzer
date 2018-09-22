@@ -9,27 +9,21 @@ body {
 .dashboard {
   height: 80vh;
   display: flex;
-  padding: 20px;
+  padding: 0 20px 20px 20px;
 }
 
 .live-feed {
   width: 30vw;
-  height: 80vh;
   margin-right: 20px;
   display: flex;
   flex-direction: column;
 }
 
 .feed {
-  /* height: 70vh; */
   height: 100%;
   width: 100%;
   padding: 20px;
   background: #fafafa;
-  /* display: flex;
-  flex-direction: column;
-  align-items: center;
-  border-radius: 5px; */
   overflow: scroll;
 }
 
@@ -40,7 +34,6 @@ body {
 .tweet {
   width: 100%;
 }
-
 
 /* CHARTS */
 .charts {
@@ -83,9 +76,30 @@ canvas {
   font-size: 1em;
   margin-left: 20px;
   padding: 10px;
-  border-radius: 5px;
+  background: #fafafa;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
 }
 
 .header-screen-name>input:focus {
-  outline: 1px solid rgb(180, 190, 255);
+  outline: none;
+}
+
+.results-button {
+  height: 100%;
+}
+
+.results-button>button {
+  height: 100%;
+  background: transparent;
+  border: 1px solid rgb(135, 220, 226);
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  transition: all 0.3s;
+}
+
+.results-button>button:hover {
+  cursor: pointer;
+  color: #fff;
+  background: rgb(135, 220, 226);
 }

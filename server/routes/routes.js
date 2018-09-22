@@ -97,7 +97,7 @@ router.use('/home/updateTwitterFeed/:userId', getUserTokens);
 router.use('/users/:userId/friends', getUserTokens);
 router.use('/users/:userId/feed', getUserTokens);
 router.use('/users/:userId/getUserPersonality',getUserTokens);
-router.use('/users/:userId/getUserTone',getUserTokens);
+router.use('/users/:userId/getUserTone', getUserTokens);
 
 router.get('/', (req, res) => {
   res.status(200).json({message: 'connected / GET'});
@@ -108,7 +108,8 @@ router.get('/home', (req, res) => {
 });
 
 router.get('/home/updateTwitterFeed/:userId', (req, res) => {
-  request.get({url:`https://api.twitter.com/1.1/statuses/user_timeline.json?count=200`, oauth: req.oauth}, (err, response, body) => {
+  const {screenName} = req.query;
+  request.get({url:`https://api.twitter.com/1.1/statuses/user_timeline.json?${screenName ? 'screen_name=' + screenName : ''}&count=200&tweet_mode=extended`, oauth: req.oauth}, (err, response, body) => {
     if (err) {
       res.send(err);
     }
@@ -117,7 +118,6 @@ router.get('/home/updateTwitterFeed/:userId', (req, res) => {
 });
 
 router.get('/users/:userId/getUserPersonality', (req,res) => {
-  console.log('PERSONALITY QUERY:', req.query.screenName);
   getUserTweets(req.oauth, req.query.screenName, (err, body) => {
     let tweets = [];
     body.forEach((tweet)=>{
@@ -137,7 +137,6 @@ router.get('/users/:userId/getUserPersonality', (req,res) => {
 })
 
 router.get('/users/:userId/getUserTone', (req,res) => {
-  console.log('TONE QUERY:', req.query.screenName);
   getUserTweets(req.oauth, req.query.screenName, (err, body) => {  
     let tweets = [];
       body.forEach((tweet)=>{
@@ -163,7 +162,6 @@ router.post ('/getTweetTone', jsonParser, (req,res)=>{
       console.log(err)
       res.send(err)
     } else {
-      console.log('single twee to tone success!')
       res.send(body)
     }
   })
