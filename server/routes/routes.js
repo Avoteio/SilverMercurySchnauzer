@@ -36,20 +36,19 @@ const getUserTokens = (req, res, next) => {
   });
 }
 
-const getUserTweets = (oauth,callback) => {
-  console.log('here is oauth:',oauth)
-  request.get({url:`https://api.twitter.com/1.1/statuses/user_timeline.json?tweet_mode=extended&count=200`, oauth: oauth}, (err, response, body) => {
+const getUserTweets = (oauth, screenName, callback) => {
+  request.get({url:`https://api.twitter.com/1.1/statuses/user_timeline.json?${screenName ? 'screen_name=' + screenName : ''}&tweet_mode=extended&count=200`, oauth: oauth}, (err, response, body) => {
     if (err) {
-      callback(err)
+      callback(err);
     }
-    callback(null,JSON.parse(body))
+    callback(null,JSON.parse(body));
   });
 }
 
 const getUserPersonality = (text,callback) => {
-  var personalityInsights = new PersonalityInsightsV3 ({
+  var personalityInsights = new PersonalityInsightsV3({
     username: '264dd11f-9485-4a1d-a4d2-10389711df8f',
-    password: 'DIOxnbox8KRp',
+    password: process.env.WATSON_PASSWORD,
     version: '2017-10-13',
     url: 'https://gateway.watsonplatform.net/personality-insights/api/v3/profile?version=2017-10-13'
   });
@@ -64,8 +63,6 @@ const getUserPersonality = (text,callback) => {
         console.log('error:', err);
         callback(err)
       } else {
-        console.log('success!!!')
-        console.log(JSON.stringify(response, null, 2));
         callback(null,JSON.stringify(response,null,2))
       }
     }
@@ -89,7 +86,6 @@ const getUserTone = (text,callback) => {
         console.log(err);
         callback(err)
       } else {
-        console.log(JSON.stringify(tone, null, 2));
         callback(null,JSON.stringify(tone, null, 2))
       }
     }
@@ -112,18 +108,17 @@ router.get('/home', (req, res) => {
 });
 
 router.get('/home/updateTwitterFeed/:userId', (req, res) => {
-  request.get({url:`https://api.twitter.com/1.1/statuses/user_timeline.json?count=100`, oauth: req.oauth}, (err, response, body) => {
-    if (error) {
-      console.log(err);
+  request.get({url:`https://api.twitter.com/1.1/statuses/user_timeline.json?count=200`, oauth: req.oauth}, (err, response, body) => {
+    if (err) {
       res.send(err);
     }
     res.send(JSON.parse(body)).status(200);
   });
 });
 
-// -------WATSON HERE-------
-router.get('/users/:userId/getUserPersonality', (req,res)=>{
-  getUserTweets(req.oauth,(err, body)=>{
+router.get('/users/:userId/getUserPersonality', (req,res) => {
+  console.log('PERSONALITY QUERY:', req.query.screenName);
+  getUserTweets(req.oauth, req.query.screenName, (err, body) => {
     let tweets = [];
     body.forEach((tweet)=>{
       tweets.push(tweet.full_text)
@@ -135,15 +130,15 @@ router.get('/users/:userId/getUserPersonality', (req,res)=>{
         console.log('error',err)
         res.status(err.code).send(err.error)
       } else {
-        console.log('PERSONALITY IS:',body)
         res.send(body);
       }
     })
   })
 })
 
-router.get('/users/:userId/getUserTone', (req,res)=>{
-  getUserTweets(req.oauth,(err, body)=>{  
+router.get('/users/:userId/getUserTone', (req,res) => {
+  console.log('TONE QUERY:', req.query.screenName);
+  getUserTweets(req.oauth, req.query.screenName, (err, body) => {  
     let tweets = [];
       body.forEach((tweet)=>{
         tweets.push(tweet.full_text)
@@ -155,7 +150,6 @@ router.get('/users/:userId/getUserTone', (req,res)=>{
           console.log('error',err)
           res.status(err.code).send(err.error)
         } else {
-          console.log('PERSONALITY IS:',body)
           res.send(body);
         }
       })
@@ -181,45 +175,45 @@ router.get('/users/:userId/feed', (req, res) => {
   });
 });
 
-router.get('/users/:userId/friends', (req, res) => {
-  request.get({url:`https://api.twitter.com/1.1/friends/ids.json`, oauth: req.oauth}, (err, response, body) => {
-    if (err) {
-      console.log('error!@line 68',err);
-    }
-    const {ids} = JSON.parse(body);
-    Promise.all(ids.map(id => {
-      const options = {
-        method: 'GET',
-        url: `https://api.twitter.com/1.1/statuses/user_timeline.json?user_id=${id}&tweet_mode=extended&include_rts=0&count=200`,
-        oauth: req.oauth
-      };
-      return new Promise((resolve, reject) => {
-        request(options, (err, res, body) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(JSON.parse(body));
-          }
-        });
-      });
-    }))
-    .then((results) => {
-      let map = {};
-      results.forEach(user => {
-        user.forEach(tweet => {
-          map[tweet.user.name] ? map[tweet.user.name].push(tweet.full_text) : map[tweet.user.name] = [tweet.full_text];
-        });
-      });
-      return map;
-    })
-    .then(map => {
-      res.send(map);
-    })
-    .catch(err => {
-      console.log('nope',err);
-    });
-  });
-});
+// router.get('/users/:userId/friends', (req, res) => {
+//   request.get({url:`https://api.twitter.com/1.1/friends/ids.json`, oauth: req.oauth}, (err, response, body) => {
+//     if (err) {
+//       console.log('error!@line 68',err);
+//     }
+//     const {ids} = JSON.parse(body);
+//     Promise.all(ids.map(id => {
+//       const options = {
+//         method: 'GET',
+//         url: `https://api.twitter.com/1.1/statuses/user_timeline.json?user_id=${id}&tweet_mode=extended&include_rts=0&count=200`,
+//         oauth: req.oauth
+//       };
+//       return new Promise((resolve, reject) => {
+//         request(options, (err, res, body) => {
+//           if (err) {
+//             reject(err);
+//           } else {
+//             resolve(JSON.parse(body));
+//           }
+//         });
+//       });
+//     }))
+//     .then((results) => {
+//       let map = {};
+//       results.forEach(user => {
+//         user.forEach(tweet => {
+//           map[tweet.user.name] ? map[tweet.user.name].push(tweet.full_text) : map[tweet.user.name] = [tweet.full_text];
+//         });
+//       });
+//       return map;
+//     })
+//     .then(map => {
+//       res.send(map);
+//     })
+//     .catch(err => {
+//       console.log('nope',err);
+//     });
+//   });
+// });
 
 router.get('/drafts', (req, res) => {
   res.status(200).json({message: 'connected /api/drafts GET'});

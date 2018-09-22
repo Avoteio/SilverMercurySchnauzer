@@ -13,10 +13,13 @@ class LiveFeed extends Component {
       tweets: [],
       isLoading: true
     }
-    this.getPersonality = this.getPersonality.bind(this);
   }
 
   componentDidMount() {
+    this.populateFeed();
+  }
+
+  populateFeed() {
     axios.get(`/api/users/${localStorage.getItem('userId')}/feed`)
     .then(({data}) => {
       this.setState({
@@ -24,20 +27,8 @@ class LiveFeed extends Component {
         isLoading: false
       });
     })
-    .catch(console.log('err'));
-
-
-    //GET FRIEND TWEET
-    this.getPersonality()
-    
+    .catch(console.log);
   }
-    getPersonality() {
-      axios.get(`/api/users/${localStorage.getItem('userId')}/getUserPersonality`)
-      .then(({data}) => {
-        console.log('talking to user tweets!',data)
-      })
-      .catch(console.log);
-    }
 
   render() {
     return (
