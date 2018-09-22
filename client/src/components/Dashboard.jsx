@@ -23,13 +23,11 @@ class Dashboard extends React.Component {
 
     this.handleValidation = this.handleValidation.bind(this);
     this.getUserData = this.getUserData.bind(this);
-    this.getUserTone = this.getUserTone.bind(this);
-    this.getUserPersonality = this.getUserPersonality.bind(this);
+    this.getUserToneAndPersonality = this.getUserToneAndPersonality.bind(this);
   }
 
   componentWillMount() {
-    this.getUserTone();
-    this.getUserPersonality();
+    this.getUserToneAndPersonality();
   }
 
   componentDidMount() {
@@ -53,29 +51,20 @@ class Dashboard extends React.Component {
     .catch(err => console.log(`err from updateTwitterFeed`, err));
   }
   
-  getUserTone(screenName) {
-    axios.get(`/api/users/${localStorage.getItem('userId')}/getUserTone`, {
+  getUserToneAndPersonality (screenName) {
+    this.setState({
+      loading: true
+    })
+    axios.get(`/api/users/${localStorage.getItem('userId')}/getUserToneAndPersonality`, {
       params: {
         screenName: screenName
       }
     })
     .then(({data}) => {
       this.setState({
-        tone: data
-      });
-    })
-    .catch(console.log);
-  }
-
-  getUserPersonality(screenName) {
-    axios.get(`/api/users/${localStorage.getItem('userId')}/getUserPersonality`, {
-      params: {
-        screenName: screenName
-      }
-    })
-    .then(({data}) => {
-      this.setState({
-        personality: data
+        loading: false,
+        personality: data.personality,
+        tone: data.tone
       });
     })
     .catch(console.log);
@@ -105,26 +94,25 @@ class Dashboard extends React.Component {
         <NavBar />
         <HeaderBar 
           user={this.state.selectedUserInfo}
-          getUserTone={this.getUserTone}
-          getUserPersonality={this.getUserPersonality}
+          getUserToneAndPersonality={this.getUserToneAndPersonality}
           getUserData={this.getUserData}
         />
         <div className="dashboard">
           <LiveFeed tweets={this.state.userTweets}/>
           <div className="charts">
-            {this.state.personality ? 
-              <Personality 
-                personality={this.state.personality}
-              />
+            {!this.state.loading ? 
+              <div>
+                <Personality 
+                  personality={this.state.personality}
+                />
+                <Sentiment
+                  tone={this.state.tone}
+                />
+              </div>
             :
-              <LoadingScreen />
-            }
-            {this.state.tone ? 
-              <Sentiment
-                tone={this.state.tone}
-              />
-            :
-              <LoadingScreen />
+              <div>
+                <LoadingScreen /> 
+              </div>             
             }
           </div>
         </div>

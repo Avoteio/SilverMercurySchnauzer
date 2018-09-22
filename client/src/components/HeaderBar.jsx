@@ -4,11 +4,9 @@ import axios from 'axios';
 class HeaderBar extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       input: ''
     };
-
     this.handleChange = this.handleChange.bind(this);
     this.handleClick = this.handleClick.bind(this);
   }
@@ -20,8 +18,7 @@ class HeaderBar extends Component {
   }
 
   handleClick() {
-    this.props.getUserTone(this.state.input);
-    this.props.getUserPersonality(this.state.input);
+    this.props.getUserToneAndPersonality(this.state.input);
     this.props.getUserData(this.state.input);
   }
   
