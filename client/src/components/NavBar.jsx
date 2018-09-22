@@ -38,7 +38,10 @@ class NavBar extends React.Component {
   render() {
     return (
       <div>
-        <AppBar position='static' color='primary'>
+        <AppBar 
+          position='static'
+          color='primary'
+        >
           <Toolbar>
             <Drawer open={this.state.drawerOpen} variant='temporary' color='primary' >
               <List >
@@ -54,7 +57,7 @@ class NavBar extends React.Component {
                   </ListItemIcon>
                   <ListItemText primary="Create New Post"/>
                 </ListItem>
-                <ListItem button divider>
+                {/* <ListItem button divider>
                   <ListItemIcon>
                     <AddIcon />
                   </ListItemIcon>
@@ -65,7 +68,7 @@ class NavBar extends React.Component {
                     <RemoveIcon />
                   </ListItemIcon>
                   <ListItemText primary="Remove Account" />
-                </ListItem>
+                </ListItem> */}
                 <ListItem button onClick={this.handleLogout}>
                   <ListItemIcon>
                     <LogoutIcon />
@@ -80,6 +83,7 @@ class NavBar extends React.Component {
             <Typography variant="title" color="inherit" >
               Menu
             </Typography>
+            <img className="nav-logo" src="https://i.imgur.com/PQE22ee.png"/>
           </Toolbar>
         </AppBar>
         
