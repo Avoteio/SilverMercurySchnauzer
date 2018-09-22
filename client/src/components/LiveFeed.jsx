@@ -1,35 +1,26 @@
 import React, {Component} from 'react';
-import WriteTweet from './WriteTweet.jsx';
-import LoadingScreen from './LoadingScreen.jsx';
-// import FeedItem from './FeedItem.jsx';
 import Tweet from 'react-tweet';
-import axios from 'axios';
 
-class LiveFeed extends Component {
-  constructor(props) {
-    super(props);
+const LiveFeed = (props) => (
+  <div className="live-feed">
+    <div className="feed">
+      {props.tweets.map(t => <Tweet key={t.id} data={t} linkProps={{target: '_blank', rel: 'noreferrer'}}/>)}
+    </div>
+  </div>
+);
 
-    this.state = {
-      tweets: [],
-      isLoading: true
-    }
-  }
+export default LiveFeed;
 
-  componentDidMount() {
-    this.populateFeed();
-  }
+// class LiveFeed extends Component {
+//   constructor(props) {
+//     super(props);
 
-  populateFeed() {
-    axios.get(`/api/users/${localStorage.getItem('userId')}/feed`)
-    .then(({data}) => {
-      this.setState({
-        tweets: data,
-        isLoading: false
-      });
-    })
-    .catch(console.log);
-  }
+//     this.state = {
+//       tweets: []
+//     }
+//   }
 
+<<<<<<< HEAD
   render() {
     return (
       <div className="live-feed">
@@ -45,5 +36,17 @@ class LiveFeed extends Component {
     );
   }
 }
+=======
+//   render() {
+//     return (
+//       <div className="live-feed">
+//         <div className="feed">
+//           {this.props.tweets.map(t => <Tweet key={t.id} data={t} linkProps={{target: '_blank', rel: 'noreferrer'}}/>)}
+//         </div>
+//       </div>
+//     );
+//   }
+// }
+>>>>>>> d5bd5729fb41bca9ad988d924b3989504249f434
 
-export default LiveFeed;
+// export default LiveFeed;

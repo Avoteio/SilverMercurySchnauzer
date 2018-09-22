@@ -19,6 +19,7 @@ class HeaderBar extends Component {
 
   handleClick() {
     this.props.getUserToneAndPersonality(this.state.input);
+    this.props.getUserData(this.state.input);
   }
   
   render() {

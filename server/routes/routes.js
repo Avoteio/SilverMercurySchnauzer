@@ -104,7 +104,8 @@ router.get('/home', (req, res) => {
 });
 
 router.get('/home/updateTwitterFeed/:userId', (req, res) => {
-  request.get({url:`https://api.twitter.com/1.1/statuses/user_timeline.json?count=200`, oauth: req.oauth}, (err, response, body) => {
+  const {screenName} = req.query;
+  request.get({url:`https://api.twitter.com/1.1/statuses/user_timeline.json?${screenName ? 'screen_name=' + screenName : ''}&count=200&tweet_mode=extended`, oauth: req.oauth}, (err, response, body) => {
     if (err) {
       res.send(err);
     }
@@ -144,7 +145,6 @@ router.post ('/getTweetTone', jsonParser, (req,res)=>{
       console.log(err)
       res.send(err)
     } else {
-      console.log('single twee to tone success!')
       res.send(body)
     }
   })

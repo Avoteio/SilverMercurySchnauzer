@@ -35,15 +35,18 @@ class Dashboard extends React.Component {
     this.handleValidation();
   }
 
-  getUserData() {
-    axios.get(`/api/home/updateTwitterFeed/${localStorage.getItem('userId')}`)
-    .then(({data}) => {
-      if (data.length) {
-        this.setState({
-          userTweets: data,
-          selectedUserInfo: data[0].user
-        });
+  getUserData(screenName) {
+    axios.get(`/api/home/updateTwitterFeed/${localStorage.getItem('userId')}`, {
+      params: {
+        screenName: screenName
       }
+    })
+    .then(({data}) => {
+      console.log('SCREEN NAME DATA:', data);
+      this.setState({
+        userTweets: data,
+        selectedUserInfo: data[0].user
+      });
     })
     .catch(err => console.log(`err from updateTwitterFeed`, err));
   }
@@ -92,9 +95,10 @@ class Dashboard extends React.Component {
         <HeaderBar 
           user={this.state.selectedUserInfo}
           getUserToneAndPersonality={this.getUserToneAndPersonality}
+          getUserData={this.getUserData}
         />
         <div className="dashboard">
-          <LiveFeed />
+          <LiveFeed tweets={this.state.userTweets}/>
           <div className="charts">
             {!this.state.loading ? 
               <div>
