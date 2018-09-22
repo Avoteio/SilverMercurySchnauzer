@@ -101,18 +101,18 @@ class Dashboard extends React.Component {
           <LiveFeed tweets={this.state.userTweets}/>
           <div className="charts">
             {!this.state.loading ? 
-              <div>
-                <Personality 
-                  personality={this.state.personality}
-                />
-                <Sentiment
-                  tone={this.state.tone}
-                />
-              </div>
+              <Personality 
+                personality={this.state.personality}
+              />
             :
-              <div>
-                <LoadingScreen /> 
-              </div>             
+              <LoadingScreen /> 
+            }
+            {!this.state.loading ? 
+              <Sentiment
+                tone={this.state.tone}
+              />
+            :
+              <LoadingScreen /> 
             }
           </div>
         </div>
