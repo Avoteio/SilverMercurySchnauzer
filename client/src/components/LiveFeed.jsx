@@ -16,6 +16,10 @@ class LiveFeed extends Component {
   }
 
   componentDidMount() {
+    this.populateFeed();
+  }
+
+  populateFeed() {
     axios.get(`/api/users/${localStorage.getItem('userId')}/feed`)
     .then(({data}) => {
       this.setState({
@@ -23,12 +27,7 @@ class LiveFeed extends Component {
         isLoading: false
       });
     })
-    .catch(console.log('err'));
-
-
-    //GET FRIEND TWEET
-    // this.getPersonality()
-    
+    .catch(console.log);
   }
 
   render() {

@@ -9,7 +9,7 @@ body {
 .dashboard {
   min-height: 80vh;
   display: flex;
-  padding: 20px;
+  padding: 0 20px;
 }
 
 .live-feed {
@@ -57,4 +57,35 @@ body {
 
 canvas {
   width: 100% !important;
+}
+
+.header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 0;
+  height: 80px;
+}
+
+.header-image {
+  max-height: 100%;
+  max-width: 100%;
+  border-radius: 50%;
+}
+
+.header-screen-name {
+  height: 100%;
+}
+
+.header-screen-name>input {
+  border: none;
+  height: 100%;
+  font-size: 1em;
+  margin-left: 20px;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.header-screen-name>input:focus {
+  outline: 1px solid rgb(180, 190, 255);
 }

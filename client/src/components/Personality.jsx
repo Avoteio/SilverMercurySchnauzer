@@ -7,7 +7,7 @@ class Personality extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: {}
+      data: null
     }
   }
 
@@ -18,13 +18,15 @@ class Personality extends React.Component {
   getPersonality() {
     axios.get(`/api/users/${localStorage.getItem('userId')}/getUserPersonality`)
     .then(({data}) => {
-      console.log('talking to user tweets!',data)
+      this.setState({
+        data: data
+      })
     })
     .catch(console.log);
   }
 
   render() {
-    const {personality} = data;
+    const {personality} = this.state.data || data;
     const labels = personality.map(val => val.name);
     const percentile = personality.map(val => val.percentile);
 
