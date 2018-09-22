@@ -117,3 +117,27 @@ canvas {
   margin-left: 85%;
   max-height: 64px;
 }
+
+@media only screen and (max-width: 1000px) {
+  .dashboard {
+    flex-direction: column;
+    padding: 0;
+  }
+
+  .live-feed {
+    width: 100vw;
+    height: 50vh;
+  }
+  
+  .tweet {
+    margin: 0 auto;
+  }
+
+  .charts {
+    width: 100vw;
+  }
+
+  .polar-chart {
+    margin: 10px 0;
+  }
+}
