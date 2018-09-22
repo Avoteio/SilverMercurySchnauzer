@@ -4,6 +4,7 @@ import NavBar from './NavBar.jsx';
 import { Redirect, withRouter } from "react-router-dom";
 import axios from 'axios';
 import LoadingScreen from './LoadingScreen.jsx';
+import HeaderBar from './HeaderBar.jsx';
 import LiveFeed from './LiveFeed.jsx';
 import Personality from './Personality.jsx';
 import Sentiment from './Sentiment.jsx';
@@ -12,26 +13,33 @@ class Dashboard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      items: [1, 2, 3, 4, 5],
-      authenticated: false,
       loading: true,
-      hasMounted: false,
-      authenticated: false
+      authenticated: false,
+      userTweets: [],
+      selectedUserInfo: {}
     };
 
     this.handleValidation = this.handleValidation.bind(this);
-    this.populateFeed = this.populateFeed.bind(this);
-    this.getUserTone = this.getUserTone.bind(this);
+    this.getUserData = this.getUserData.bind(this);
   }
 
   componentDidMount() {
-    this.setState({
-      hasMounted: true,
-    }, () => {
-      this.handleValidation();
-    });
+    this.handleValidation();
+    this.getUserData();
+  }
 
-    this.getUserTone();
+  getUserData() {
+    axios.get(`/api/home/updateTwitterFeed/${localStorage.getItem('userId')}`)
+    .then(({data}) => {
+      if (data.length) {
+        this.setState({
+          loading: false,
+          userTweets: data,
+          selectedUserInfo: data[0].user
+        });
+      }
+    })
+    .catch(err => console.log(`err from updateTwitterFeed`, err));
   }
 
   getUserTone() {
@@ -62,28 +70,16 @@ class Dashboard extends React.Component {
       })
   }
 
-  populateFeed() {
-    // axios.get(`/api/home/updateTwitterFeed/${localStorage.getItem('userId')}`)
-    //   .then((tweets) => {
-    //     this.setState({
-    //       items: tweets.data,
-    //       loading: false
-    //     });
-    //   })
-    //   .catch((err) => {
-    //     console.log('Error retrieving tweets for user: ', err);
-    //   })
-  }
-
   render() {
     return (
       <div>
         <NavBar />
+        <HeaderBar user={this.state.selectedUserInfo}/>
         <div className="dashboard">
           <LiveFeed />
           <div className="charts">
-            <Personality />
-            <Sentiment />
+            <Personality tweets={this.state.userTweets} userInfo={this.state.selectedUserInfo}/>
+            <Sentiment tweets={this.state.userTweets} userInfo={this.state.selectedUserInfo}/>
           </div>
         </div>
       </div>
