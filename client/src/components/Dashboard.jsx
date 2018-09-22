@@ -23,13 +23,11 @@ class Dashboard extends React.Component {
 
     this.handleValidation = this.handleValidation.bind(this);
     this.getUserData = this.getUserData.bind(this);
-    this.getUserTone = this.getUserTone.bind(this);
-    this.getUserPersonality = this.getUserPersonality.bind(this);
+    this.getUserToneAndPersonality = this.getUserToneAndPersonality.bind(this);
   }
 
   componentWillMount() {
-    this.getUserTone();
-    this.getUserPersonality();
+    this.getUserToneAndPersonality();
   }
 
   componentDidMount() {
@@ -37,42 +35,36 @@ class Dashboard extends React.Component {
     this.handleValidation();
   }
 
-  getUserData() {
-    axios.get(`/api/home/updateTwitterFeed/${localStorage.getItem('userId')}`)
-    .then(({data}) => {
-      if (data.length) {
-        this.setState({
-          userTweets: data,
-          selectedUserInfo: data[0].user
-        });
+  getUserData(screenName) {
+    axios.get(`/api/home/updateTwitterFeed/${localStorage.getItem('userId')}`, {
+      params: {
+        screenName: screenName
       }
+    })
+    .then(({data}) => {
+      console.log('SCREEN NAME DATA:', data);
+      this.setState({
+        userTweets: data,
+        selectedUserInfo: data[0].user
+      });
     })
     .catch(err => console.log(`err from updateTwitterFeed`, err));
   }
   
-  getUserTone(screenName) {
-    axios.get(`/api/users/${localStorage.getItem('userId')}/getUserTone`, {
+  getUserToneAndPersonality (screenName) {
+    this.setState({
+      loading: true
+    })
+    axios.get(`/api/users/${localStorage.getItem('userId')}/getUserToneAndPersonality`, {
       params: {
         screenName: screenName
       }
     })
     .then(({data}) => {
       this.setState({
-        tone: data
-      });
-    })
-    .catch(console.log);
-  }
-
-  getUserPersonality(screenName) {
-    axios.get(`/api/users/${localStorage.getItem('userId')}/getUserPersonality`, {
-      params: {
-        screenName: screenName
-      }
-    })
-    .then(({data}) => {
-      this.setState({
-        personality: data
+        loading: false,
+        personality: data.personality,
+        tone: data.tone
       });
     })
     .catch(console.log);
@@ -102,25 +94,25 @@ class Dashboard extends React.Component {
         <NavBar />
         <HeaderBar 
           user={this.state.selectedUserInfo}
-          getUserTone={this.getUserTone}
-          getUserPersonality={this.getUserPersonality}
+          getUserToneAndPersonality={this.getUserToneAndPersonality}
+          getUserData={this.getUserData}
         />
         <div className="dashboard">
-          <LiveFeed />
+          <LiveFeed tweets={this.state.userTweets}/>
           <div className="charts">
-            {this.state.personality ? 
+            {!this.state.loading ? 
               <Personality 
                 personality={this.state.personality}
               />
             :
-              <LoadingScreen />
+              <LoadingScreen /> 
             }
-            {this.state.tone ? 
+            {!this.state.loading ? 
               <Sentiment
                 tone={this.state.tone}
               />
             :
-              <LoadingScreen />
+              <LoadingScreen /> 
             }
           </div>
         </div>

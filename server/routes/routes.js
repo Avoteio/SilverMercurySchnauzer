@@ -4,7 +4,6 @@ const request = require('request');
 const authenticate = require('./authenticate.js');
 const createPost = require('./createPost.js');
 const twitter = require('../../utility/passport/twitter');
-// const facebook = require('../../utility/passport/facebook');
 const { retrieveTokens } = require('../../database/index');
 const util = require('../../utility/index');
 const watson = require('./watsonRoutes')
@@ -14,7 +13,6 @@ const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
 
 passport.use(twitter.strat);
-// passport.use(facebook.strat);
 router.use('/createpost', createPost);
 router.use('/', authenticate);
 router.use('/watson',watson)
@@ -94,10 +92,8 @@ const getUserTone = (text,callback) => {
   
 
 router.use('/home/updateTwitterFeed/:userId', getUserTokens);
-router.use('/users/:userId/friends', getUserTokens);
 router.use('/users/:userId/feed', getUserTokens);
-router.use('/users/:userId/getUserPersonality',getUserTokens);
-router.use('/users/:userId/getUserTone',getUserTokens);
+router.use('/users/:userId/getUserToneAndPersonality',getUserTokens);
 
 router.get('/', (req, res) => {
   res.status(200).json({message: 'connected / GET'});
@@ -108,7 +104,8 @@ router.get('/home', (req, res) => {
 });
 
 router.get('/home/updateTwitterFeed/:userId', (req, res) => {
-  request.get({url:`https://api.twitter.com/1.1/statuses/user_timeline.json?count=200`, oauth: req.oauth}, (err, response, body) => {
+  const {screenName} = req.query;
+  request.get({url:`https://api.twitter.com/1.1/statuses/user_timeline.json?${screenName ? 'screen_name=' + screenName : ''}&count=200&tweet_mode=extended`, oauth: req.oauth}, (err, response, body) => {
     if (err) {
       res.send(err);
     }
@@ -116,44 +113,29 @@ router.get('/home/updateTwitterFeed/:userId', (req, res) => {
   });
 });
 
-router.get('/users/:userId/getUserPersonality', (req,res) => {
-  console.log('PERSONALITY QUERY:', req.query.screenName);
-  getUserTweets(req.oauth, req.query.screenName, (err, body) => {
-    let tweets = [];
-    body.forEach((tweet)=>{
-      tweets.push(tweet.full_text)
-    })
+router.get('/users/:userID/getUserToneAndPersonality', (req,res) => {
+  let result = {}
+  getUserTweets(req.oauth, req.query.screenName, (err, body) => {  
+    let tweets = body.map((tweet)=>tweet.full_text);
     let tweetText = tweets.join('')
-    ///WATSON HERE
-    getUserPersonality(tweetText,(err,body) => {
+      getUserTone(tweetText,(err,body) => {
       if (err) {
         console.log('error',err)
         res.status(err.code).send(err.error)
       } else {
-        res.send(body);
+        result.tone = JSON.parse(body);
+        getUserPersonality(tweetText,(err,body) => {
+          if (err) {
+            console.log('error',err)
+            res.status(err.code).send(err.error)
+          } else {
+            result.personality = JSON.parse(body);
+            res.send(result);    
+          }
+        })
       }
-    })
+    }) 
   })
-})
-
-router.get('/users/:userId/getUserTone', (req,res) => {
-  console.log('TONE QUERY:', req.query.screenName);
-  getUserTweets(req.oauth, req.query.screenName, (err, body) => {  
-    let tweets = [];
-      body.forEach((tweet)=>{
-        tweets.push(tweet.full_text)
-      })
-      let tweetText = tweets.join('')
-      //watson here
-      getUserTone(tweetText,(err,body) => {
-        if (err) {
-          console.log('error',err)
-          res.status(err.code).send(err.error)
-        } else {
-          res.send(body);
-        }
-      })
-    })
 })
 
 router.post ('/getTweetTone', jsonParser, (req,res)=>{
@@ -163,7 +145,6 @@ router.post ('/getTweetTone', jsonParser, (req,res)=>{
       console.log(err)
       res.send(err)
     } else {
-      console.log('single twee to tone success!')
       res.send(body)
     }
   })
@@ -175,45 +156,6 @@ router.get('/users/:userId/feed', (req, res) => {
   });
 });
 
-// router.get('/users/:userId/friends', (req, res) => {
-//   request.get({url:`https://api.twitter.com/1.1/friends/ids.json`, oauth: req.oauth}, (err, response, body) => {
-//     if (err) {
-//       console.log('error!@line 68',err);
-//     }
-//     const {ids} = JSON.parse(body);
-//     Promise.all(ids.map(id => {
-//       const options = {
-//         method: 'GET',
-//         url: `https://api.twitter.com/1.1/statuses/user_timeline.json?user_id=${id}&tweet_mode=extended&include_rts=0&count=200`,
-//         oauth: req.oauth
-//       };
-//       return new Promise((resolve, reject) => {
-//         request(options, (err, res, body) => {
-//           if (err) {
-//             reject(err);
-//           } else {
-//             resolve(JSON.parse(body));
-//           }
-//         });
-//       });
-//     }))
-//     .then((results) => {
-//       let map = {};
-//       results.forEach(user => {
-//         user.forEach(tweet => {
-//           map[tweet.user.name] ? map[tweet.user.name].push(tweet.full_text) : map[tweet.user.name] = [tweet.full_text];
-//         });
-//       });
-//       return map;
-//     })
-//     .then(map => {
-//       res.send(map);
-//     })
-//     .catch(err => {
-//       console.log('nope',err);
-//     });
-//   });
-// });
 
 router.get('/drafts', (req, res) => {
   res.status(200).json({message: 'connected /api/drafts GET'});
