@@ -18,7 +18,8 @@ class Dashboard extends React.Component {
       userTweets: [],
       selectedUserInfo: {},
       tone: null,
-      personality: null
+      personality: null,
+      userNotFound: false
     };
 
     this.handleValidation = this.handleValidation.bind(this);
@@ -42,7 +43,6 @@ class Dashboard extends React.Component {
       }
     })
     .then(({data}) => {
-      console.log('SCREEN NAME DATA:', data);
       this.setState({
         userTweets: data,
         selectedUserInfo: data[0].user
@@ -54,7 +54,8 @@ class Dashboard extends React.Component {
   getUserToneAndPersonality (screenName) {
     this.setState({
       loading: true
-    })
+    });
+
     axios.get(`/api/users/${localStorage.getItem('userId')}/getUserToneAndPersonality`, {
       params: {
         screenName: screenName
@@ -64,10 +65,16 @@ class Dashboard extends React.Component {
       this.setState({
         loading: false,
         personality: data.personality,
-        tone: data.tone
+        tone: data.tone,
+        userNotFound: false
       });
     })
-    .catch(console.log);
+    .catch(err => {
+      this.setState({
+        loading: false,
+        userNotFound: true
+      })
+    });
   }
 
   handleValidation() {
@@ -96,6 +103,7 @@ class Dashboard extends React.Component {
           user={this.state.selectedUserInfo}
           getUserToneAndPersonality={this.getUserToneAndPersonality}
           getUserData={this.getUserData}
+          userNotFound={this.state.userNotFound}
         />
         <div className="dashboard">
           <LiveFeed tweets={this.state.userTweets}/>

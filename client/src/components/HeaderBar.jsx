@@ -24,6 +24,7 @@ class HeaderBar extends Component {
   
   render() {
     const {user} = this.props;
+    const userNotFound = this.props.userNotFound && <p className="error-message">USER NOT FOUND</p>;
     return (
       <div className="header">
         <div>
@@ -35,6 +36,7 @@ class HeaderBar extends Component {
         <div className="results-button">
           <button onClick={this.handleClick}>Results</button>
         </div>
+        {userNotFound}
       </div>
     )
   }

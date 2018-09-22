@@ -36,10 +36,11 @@ const getUserTokens = (req, res, next) => {
 
 const getUserTweets = (oauth, screenName, callback) => {
   request.get({url:`https://api.twitter.com/1.1/statuses/user_timeline.json?${screenName ? 'screen_name=' + screenName : ''}&tweet_mode=extended&count=200`, oauth: oauth}, (err, response, body) => {
-    if (err) {
-      callback(err);
+    if (JSON.parse(body).errors) {
+      callback(JSON.parse(body).errors);
+    } else {
+      callback(null, JSON.parse(body));
     }
-    callback(null,JSON.parse(body));
   });
 }
 
@@ -106,46 +107,51 @@ router.get('/home', (req, res) => {
 router.get('/home/updateTwitterFeed/:userId', (req, res) => {
   const {screenName} = req.query;
   request.get({url:`https://api.twitter.com/1.1/statuses/user_timeline.json?${screenName ? 'screen_name=' + screenName : ''}&count=200&tweet_mode=extended`, oauth: req.oauth}, (err, response, body) => {
-    if (err) {
-      res.send(err);
+    if (JSON.parse(body).errors) {
+      res.status(500).send(JSON.parse(body).errors[0].message);
+    } else {
+      res.send(JSON.parse(body)).status(200);
     }
-    res.send(JSON.parse(body)).status(200);
   });
 });
 
 router.get('/users/:userID/getUserToneAndPersonality', (req,res) => {
   let result = {}
   getUserTweets(req.oauth, req.query.screenName, (err, body) => {  
-    let tweets = body.map((tweet)=>tweet.full_text);
-    let tweetText = tweets.join('')
-      getUserTone(tweetText,(err,body) => {
-      if (err) {
-        console.log('error',err)
-        res.status(err.code).send(err.error)
-      } else {
-        result.tone = JSON.parse(body);
-        getUserPersonality(tweetText,(err,body) => {
-          if (err) {
-            console.log('error',err)
-            res.status(err.code).send(err.error)
-          } else {
-            result.personality = JSON.parse(body);
-            res.send(result);    
-          }
-        })
-      }
-    }) 
+    if (err) {
+      res.status(500).send(err[0].message);
+    } else {
+      let tweets = body.map(tweet => tweet.full_text);
+      let tweetText = tweets.join('')
+      getUserTone(tweetText, (err, body) => {
+        if (err) {
+          console.log('error',err)
+          res.status(err.code).send(err.error)
+        } else {
+          result.tone = JSON.parse(body);
+          getUserPersonality(tweetText,(err,body) => {
+            if (err) {
+              console.log('error',err)
+              res.status(err.code).send(err.error)
+            } else {
+              result.personality = JSON.parse(body);
+              res.send(result);    
+            }
+          })
+        }
+      });
+    }
   })
 })
 
-router.post ('/getTweetTone', jsonParser, (req,res)=>{
+router.post ('/getTweetTone', jsonParser, (req, res)=>{
   let tweet = req.body.tweet;
-  getUserTone(tweet,(err,body) => {
+  getUserTone(tweet, (err, body) => {
     if (err) {
-      console.log(err)
-      res.send(err)
+      console.log(err);
+      res.send(err);
     } else {
-      res.send(body)
+      res.send(body);
     }
   })
 })

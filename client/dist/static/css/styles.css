@@ -107,3 +107,13 @@ canvas {
 .results-button>button:focus {
   outline: none;
 }
+
+.error-message {
+  margin-left: 10px;
+  color: #ff6868;
+}
+
+.nav-logo {
+  margin-left: 85%;
+  max-height: 64px;
+}
