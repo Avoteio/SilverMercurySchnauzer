@@ -6,6 +6,7 @@ import MuiPickersUtilsProvider from 'material-ui-pickers/utils/MuiPickersUtilsPr
 import { DateTimePicker } from 'material-ui-pickers';
 import axios from 'axios';
 import NavBar from './NavBar.jsx';
+import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 
 class CreatePost extends React.Component {
   constructor(props) {
@@ -15,7 +16,17 @@ class CreatePost extends React.Component {
       post: '',
       url: '',
       date: null,
-      showPicker: false
+      showPicker: false,
+      emojiDic: {
+        anger: '😡',
+        fear: '😱',
+        joy: '🤗',
+        sadness: '🤯',
+        analytical: '🧠',
+        confident: '😎',
+        tentative: '😳'
+
+      }
     }
 
     this.handleSavePost = this.handleSavePost.bind(this)
@@ -24,6 +35,59 @@ class CreatePost extends React.Component {
     this.setCaption = this.setCaption.bind(this);
     this.setPost = this.setPost.bind(this);
     this.setUrl = this.setUrl.bind(this);
+  }
+
+  handleAnalyze() {
+    console.log('clicked');
+    axios.post('/api/getTweetTone', {tweet: this.state.post})
+    .then((res) => {
+      console.log('res.data', res.data);
+      const findTones = (data) => {
+        if (data.tones.length === 0) {
+          return [];
+        }
+        return data.tones.map((tone) => {
+          return tone.tone_id;
+        });
+      };
+      const tones = new Set();
+      const docTones = findTones(res.data.document_tone);
+      const sentences = res.data.sentences_tone;
+      const sentencesTones = [];
+      if (sentences && sentences.length > 0) {
+        sentences.forEach(sentence => {
+          const temp = findTones(sentence);
+          temp.forEach(element => {
+            sentencesTones.push(element);
+          });
+        });
+      }
+      console.log(sentencesTones);
+      sentencesTones.forEach(element => {
+        tones.add(element);
+      });
+      docTones.forEach(element => {
+        tones.add(element);
+      });
+      console.log('tones set', tones);
+      let tonesText = '';
+      tones.forEach(tone => {
+        const temp = this.state.emojiDic[tone];
+        tonesText += temp;
+      });
+      console.log('tone text', tonesText);
+      if (tonesText === '') {
+        tonesText = '🌚'
+      }
+      const prevPost = this.state.post;
+      const newPost = prevPost + tonesText;
+      this.setState({
+        post: newPost
+      });
+      
+      
+    })
+    .catch(console.log());
   }
 
   handlePublishClick() {
@@ -141,28 +205,13 @@ class CreatePost extends React.Component {
                   margin='normal'
                 >
                 </TextField>
-                <div style={{ width: '100%' }}>
-                  <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                    <DateTimePicker
-                      value={this.state.date}
-                      onChange={this.handleDateChange}
-                      disablePast
-                      required
-                      placeholder='Date'
-                      label="Publish Date"
-                      showTodayButton
-                      style={{ width: '300px' }}
-                    />
-                  </MuiPickersUtilsProvider>
-                </div>
-                <Button
-                  onClick={this.handleSavePost}
-                  variant="contained"
-                  size="medium"
-                  className='save-btn'
-                  color='primary'
-                  style={{ margin: '20px' }}
-                > Save </Button>
+
+                <Button variant="contained" color="default" onClick={() => {
+                  this.handleAnalyze();
+                }}>
+                  Analyze
+        <CloudUploadIcon />
+                </Button>
                 <Button
                   onClick={this.handlePublishClick}
                   variant="contained"

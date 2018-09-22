@@ -20,7 +20,7 @@ router.post('/save', (req, res) => {
       });
     }
   });
-})
+});
 
 router.post('/publish', (req, res) => {
   let userId = req.body.userId;

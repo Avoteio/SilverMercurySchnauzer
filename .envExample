@@ -1,7 +1,9 @@
-SSL=false
-DATABASE_URL=postgres://user:password@hostwithport/database
-fbClientID=
-fbClientSecret=
+SSL=
+DATABASE_URL=
+# fbClientID=
+# fbClientSecret=
 twConsumerKey=
 twConsumerSecret=
-herokuAppName=pure-river-11017.herokuapp.com
+herokuAppName=
+JWT_SECRET=
+WATSON_PASSWORD=
