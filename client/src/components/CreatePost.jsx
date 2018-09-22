@@ -175,7 +175,6 @@ class CreatePost extends React.Component {
                   value={this.state.caption}
                   onChange={this.setCaption}
                   fullWidth
-                  required
                   id='caption'
                   label='Enter a caption'
                   placeholder='Caption'
@@ -198,7 +197,6 @@ class CreatePost extends React.Component {
                   value={this.state.url}
                   onChange={this.setUrl}
                   fullWidth
-                  required
                   id='picture-url'
                   label='Enter a picture URL'
                   placeholder='URL'

@@ -57,7 +57,7 @@ class NavBar extends React.Component {
                   </ListItemIcon>
                   <ListItemText primary="Create New Post"/>
                 </ListItem>
-                <ListItem button divider>
+                {/* <ListItem button divider>
                   <ListItemIcon>
                     <AddIcon />
                   </ListItemIcon>
@@ -68,7 +68,7 @@ class NavBar extends React.Component {
                     <RemoveIcon />
                   </ListItemIcon>
                   <ListItemText primary="Remove Account" />
-                </ListItem>
+                </ListItem> */}
                 <ListItem button onClick={this.handleLogout}>
                   <ListItemIcon>
                     <LogoutIcon />
