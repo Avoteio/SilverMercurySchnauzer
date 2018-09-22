@@ -38,7 +38,10 @@ class NavBar extends React.Component {
   render() {
     return (
       <div>
-        <AppBar position='static' color='primary'>
+        <AppBar 
+          position='static'
+          color='primary'
+        >
           <Toolbar>
             <Drawer open={this.state.drawerOpen} variant='temporary' color='primary' >
               <List >
@@ -80,6 +83,7 @@ class NavBar extends React.Component {
             <Typography variant="title" color="inherit" >
               Menu
             </Typography>
+            <img className="nav-logo" src="https://i.imgur.com/PQE22ee.png"/>
           </Toolbar>
         </AppBar>
         
