@@ -42,6 +42,16 @@ class Dashboard extends React.Component {
     .catch(err => console.log(`err from updateTwitterFeed`, err));
   }
 
+  getUserTone() {
+    axios.get(`/api/users/${localStorage.getItem('userId')}/getUserTone`)
+    .then(({data}) => {
+      console.log('talking to user tweets for those sweet, dulcet tones!',data)
+    })
+    .catch(console.log);
+  }
+
+  
+
   handleValidation() {
     axios.post('/validateuser', {
       nativeToken: localStorage.getItem('token'),
