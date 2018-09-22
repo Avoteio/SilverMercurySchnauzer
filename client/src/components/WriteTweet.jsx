@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
+import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import axios from 'axios';
+
 
 class WriteTweet extends Component {
   constructor(props) {
@@ -31,6 +33,15 @@ class WriteTweet extends Component {
 
   }
 
+  handleAnalyze() {
+    console.log('clicked');
+    axios.post('/api/getTweetTone', {tweet: this.state.tweet})
+    .then((res) => {
+      console.log(res);
+    })
+    .catch(console.log());
+  }
+
   render() {
     return (
       <div className="write-tweet">
@@ -48,6 +59,12 @@ class WriteTweet extends Component {
 
         />
         <div className="button">
+        <Button variant="contained" color="default" onClick={() => {
+          this.handleAnalyze();
+        }}>
+        Analyze
+        <CloudUploadIcon />
+      </Button>
           <Button style={{"float" : "right"}} onClick={() => {
             this.handleClick();
           }} variant="contained" color="primary" >
