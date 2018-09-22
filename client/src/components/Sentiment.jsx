@@ -4,7 +4,6 @@ import {data} from '../dummyData';
 
 const Sentiment = (props) => {
   const {tones} = props.tone.document_tone;
-  console.log('SENTIMENT TONES:', tones);
   const data = tones.map(tone => tone.score);
   const labels = tones.map(tone => tone.tone_name);
 
