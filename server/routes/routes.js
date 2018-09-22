@@ -35,7 +35,7 @@ const getUserTokens = (req, res, next) => {
 }
 
 const getUserTweets = (oauth, screenName, callback) => {
-  request.get({url:`https://api.twitter.com/1.1/statuses/user_timeline.json?${screenName ? 'screen_name=' + screenName : ''}&tweet_mode=extended&count=200`, oauth: oauth}, (err, response, body) => {
+  request.get({url:`https://api.twitter.com/1.1/statuses/user_timeline.json?${screenName ? 'screen_name=' + screenName : ''}&tweet_mode=extended&count=200&include_rts=0`, oauth: oauth}, (err, response, body) => {
     if (JSON.parse(body).errors) {
       callback(JSON.parse(body).errors);
     } else {
@@ -106,7 +106,7 @@ router.get('/home', (req, res) => {
 
 router.get('/home/updateTwitterFeed/:userId', (req, res) => {
   const {screenName} = req.query;
-  request.get({url:`https://api.twitter.com/1.1/statuses/user_timeline.json?${screenName ? 'screen_name=' + screenName : ''}&count=200&tweet_mode=extended`, oauth: req.oauth}, (err, response, body) => {
+  request.get({url:`https://api.twitter.com/1.1/statuses/user_timeline.json?${screenName ? 'screen_name=' + screenName : ''}&count=200&tweet_mode=extended&include_rts=0`, oauth: req.oauth}, (err, response, body) => {
     if (JSON.parse(body).errors) {
       res.status(500).send(JSON.parse(body).errors[0].message);
     } else {
@@ -157,11 +157,10 @@ router.post ('/getTweetTone', jsonParser, (req, res)=>{
 })
 
 router.get('/users/:userId/feed', (req, res) => {
-  request.get({url:`https://api.twitter.com/1.1/statuses/home_timeline.json?tweet_mode=extended&count=100`, oauth: req.oauth}, (err, response, body) => {
+  request.get({url:`https://api.twitter.com/1.1/statuses/home_timeline.json?tweet_mode=extended&count=100&include_rts=0`, oauth: req.oauth}, (err, response, body) => {
     res.send(JSON.parse(body)).status(200);
   });
 });
-
 
 router.get('/drafts', (req, res) => {
   res.status(200).json({message: 'connected /api/drafts GET'});
