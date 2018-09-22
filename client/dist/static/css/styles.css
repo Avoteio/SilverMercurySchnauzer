@@ -103,3 +103,7 @@ canvas {
   color: #fff;
   background: rgb(135, 220, 226);
 }
+
+.results-button>button:focus {
+  outline: none;
+}
