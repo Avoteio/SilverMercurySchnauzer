@@ -16,16 +16,25 @@ class Dashboard extends React.Component {
       loading: true,
       authenticated: false,
       userTweets: [],
-      selectedUserInfo: {}
+      selectedUserInfo: {},
+      tone: null,
+      personality: null
     };
 
     this.handleValidation = this.handleValidation.bind(this);
     this.getUserData = this.getUserData.bind(this);
+    this.getUserTone = this.getUserTone.bind(this);
+    this.getUserPersonality = this.getUserPersonality.bind(this);
+  }
+
+  componentWillMount() {
+    this.getUserTone();
+    this.getUserPersonality();
   }
 
   componentDidMount() {
-    this.handleValidation();
     this.getUserData();
+    this.handleValidation();
   }
 
   getUserData() {
@@ -33,7 +42,6 @@ class Dashboard extends React.Component {
     .then(({data}) => {
       if (data.length) {
         this.setState({
-          loading: false,
           userTweets: data,
           selectedUserInfo: data[0].user
         });
@@ -41,65 +49,83 @@ class Dashboard extends React.Component {
     })
     .catch(err => console.log(`err from updateTwitterFeed`, err));
   }
-
-  getUserTone() {
-    axios.get(`/api/users/${localStorage.getItem('userId')}/getUserTone`)
+  
+  getUserTone(screenName) {
+    axios.get(`/api/users/${localStorage.getItem('userId')}/getUserTone`, {
+      params: {
+        screenName: screenName
+      }
+    })
     .then(({data}) => {
-      console.log('talking to user tweets for those sweet, dulcet tones!',data)
+      this.setState({
+        tone: data
+      });
     })
     .catch(console.log);
   }
 
-  
+  getUserPersonality(screenName) {
+    axios.get(`/api/users/${localStorage.getItem('userId')}/getUserPersonality`, {
+      params: {
+        screenName: screenName
+      }
+    })
+    .then(({data}) => {
+      this.setState({
+        personality: data
+      });
+    })
+    .catch(console.log);
+  }
 
   handleValidation() {
     axios.post('/validateuser', {
       nativeToken: localStorage.getItem('token'),
       userId: localStorage.getItem('userId')
     })
-      .then((validationStatus) => {
-        if (validationStatus.data === 'fullyAuthenticated') {
-          this.setState({
-            authenticated: true,
-          }, this.populateFeed);
-        } else if (validationStatus.data === 'onlyNative') {
-          this.props.history.push('/oauth');
-        } else {
-          this.props.history.push('/login');
-        }
-      })
+    .then((validationStatus) => {
+      if (validationStatus.data === 'fullyAuthenticated') {
+        this.setState({
+          authenticated: true,
+        }, this.populateFeed);
+      } else if (validationStatus.data === 'onlyNative') {
+        this.props.history.push('/oauth');
+      } else {
+        this.props.history.push('/login');
+      }
+    })
   }
 
   render() {
     return (
       <div>
         <NavBar />
-        <HeaderBar user={this.state.selectedUserInfo}/>
+        <HeaderBar 
+          user={this.state.selectedUserInfo}
+          getUserTone={this.getUserTone}
+          getUserPersonality={this.getUserPersonality}
+        />
         <div className="dashboard">
           <LiveFeed />
           <div className="charts">
-            <Personality tweets={this.state.userTweets} userInfo={this.state.selectedUserInfo}/>
-            <Sentiment tweets={this.state.userTweets} userInfo={this.state.selectedUserInfo}/>
+            {this.state.personality ? 
+              <Personality 
+                personality={this.state.personality}
+              />
+            :
+              <LoadingScreen />
+            }
+            {this.state.tone ? 
+              <Sentiment
+                tone={this.state.tone}
+              />
+            :
+              <LoadingScreen />
+            }
           </div>
         </div>
       </div>
     )
-    // if (this.state.loading) {
-    //   return <LoadingScreen /> 
-    // } else {
-    //   if (!this.state.authenticated) {
-    //     return <Redirect to='/login' />
-    //   } else {
-    //     return (
-    //       <div>
-    //         <NavBar />
-    //         {/* <div className='social-media-posts-container' style={{ width: '80%', marginLeft: 'auto', marginRight: 'auto' }}>
-    //           {this.state.items.map((tweet, i) => <FeedItem key={i} tweet={tweet} />)}
-    //         </div> */}
-    //       </div>
-    //     );
-    //   }
-    // }
   }
 }
 

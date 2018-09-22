@@ -7,16 +7,21 @@ class HeaderBar extends Component {
 
     this.state = {
       input: ''
-    }
+    };
 
     this.handleChange = this.handleChange.bind(this);
-    // this.getSearchResults = this.getSearchResults.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
 
   handleChange(e) {
     this.setState({
       input: e.target.value
     });
+  }
+
+  handleClick() {
+    this.props.getUserTone(this.state.input);
+    this.props.getUserPersonality(this.state.input);
   }
   
   render() {
@@ -30,7 +35,7 @@ class HeaderBar extends Component {
           <input className="header-screen-name" value={this.state.input} placeholder={user.screen_name} onChange={this.handleChange}></input>
         </div>
         <div className="results-button">
-          <button>Results</button>
+          <button onClick={this.handleClick}>Results</button>
         </div>
       </div>
     )

@@ -37,7 +37,6 @@ const getUserTokens = (req, res, next) => {
 }
 
 const getUserTweets = (oauth, screenName, callback) => {
-  console.log('here is oauth:',oauth)
   request.get({url:`https://api.twitter.com/1.1/statuses/user_timeline.json?${screenName ? 'screen_name=' + screenName : ''}&tweet_mode=extended&count=200`, oauth: oauth}, (err, response, body) => {
     if (err) {
       callback(err);
@@ -64,8 +63,6 @@ const getUserPersonality = (text,callback) => {
         console.log('error:', err);
         callback(err)
       } else {
-        console.log('success!!!')
-        console.log(JSON.stringify(response, null, 2));
         callback(null,JSON.stringify(response,null,2))
       }
     }
@@ -89,7 +86,6 @@ const getUserTone = (text,callback) => {
         console.log(err);
         callback(err)
       } else {
-        console.log(JSON.stringify(tone, null, 2));
         callback(null,JSON.stringify(tone, null, 2))
       }
     }
@@ -121,7 +117,8 @@ router.get('/home/updateTwitterFeed/:userId', (req, res) => {
 });
 
 router.get('/users/:userId/getUserPersonality', (req,res) => {
-  getUserTweets(req.oauth, null, (err, body) => {
+  console.log('PERSONALITY QUERY:', req.query.screenName);
+  getUserTweets(req.oauth, req.query.screenName, (err, body) => {
     let tweets = [];
     body.forEach((tweet)=>{
       tweets.push(tweet.full_text)
@@ -133,15 +130,15 @@ router.get('/users/:userId/getUserPersonality', (req,res) => {
         console.log('error',err)
         res.status(err.code).send(err.error)
       } else {
-        console.log('PERSONALITY IS:',body)
         res.send(body);
       }
     })
   })
 })
 
-router.get('/users/:userId/getUserTone', (req,res)=>{
-  getUserTweets(req.oauth,(err, body)=>{  
+router.get('/users/:userId/getUserTone', (req,res) => {
+  console.log('TONE QUERY:', req.query.screenName);
+  getUserTweets(req.oauth, req.query.screenName, (err, body) => {  
     let tweets = [];
       body.forEach((tweet)=>{
         tweets.push(tweet.full_text)
@@ -153,7 +150,6 @@ router.get('/users/:userId/getUserTone', (req,res)=>{
           console.log('error',err)
           res.status(err.code).send(err.error)
         } else {
-          console.log('PERSONALITY IS:',body)
           res.send(body);
         }
       })
