@@ -33,7 +33,6 @@ class LiveFeed extends Component {
   render() {
     return (
       <div className="live-feed">
-        {/* <div onClick={this.getPersonality}>getPersonality</div> */}
         <div className="feed">
           {this.state.isLoading ? 
             <LoadingScreen />
